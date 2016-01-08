@@ -83,10 +83,11 @@ ForEach ($record in $records)
   	Write-Host $trafficIDClock","$Name" is missing and will go on air" $myTxDate
   	$myString = "$Clock,$Name,$myTxDate"
 		#Add-content $Missingfile $myString -nonewline
+		$MissingFiles++
+
 		if($writeFile)
 		{
 			$writer.WriteLine($myString)
-			$MissingFiles++
 		}
 	}
 }
