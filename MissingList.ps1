@@ -31,7 +31,7 @@ while (Test-Path $Missingfile)
 		$Missingfile = $workingPath.ToString() + "\BikeChannel_missing_$Date2-$fileCounter.csv"
 }
 $writer = [system.io.file]::CreateText($Missingfile)
-
+$writer.NewLine = "`n"
 
 $records = import-csv $Pullfile
 
@@ -63,7 +63,8 @@ ForEach ($record in $records)
 	else
 	{
   	$myTxDate = Get-Date $txDate -Format "dd/MM/yyyy"
-  	Write-Host $trafficIDClock","$Name","$myTxDate
+  	#Write-Host $trafficIDClock","$Name","$myTxDate
+  	Write-Host $trafficIDClock","$Name" is missing and will go on air" $myTxDate
   	$myString = "$Clock,$Name,$myTxDate"
 		#Add-content $Missingfile $myString -nonewline
 		$writer.WriteLine($myString)
@@ -80,5 +81,14 @@ Write-Host $righe "Records analyzed"
 Write-Host "Found" $FoundFiles "files"
 Write-Host $MissingFiles "files are missing!!!"
 Write-Host $FilesInSecondPath "are in secondary path only!!!"
-Write-Host "Generated missing list file" $Missingfile
+if ($MissingFiles -eq 0)
+{
+	Write-Host "ALL FILES ARE PRESENT!!!!"
+	Write-Host "NO missing list file is created !!!"
+}
+else
+{
+	Write-Host "Generated missing list file" $Missingfile
+}
+
 Write-Host "-------------------------------------"
