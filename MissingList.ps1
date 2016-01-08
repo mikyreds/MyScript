@@ -1,7 +1,18 @@
-Param([string[]]$InputFile)
+Param(
+[Parameter(Mandatory=$true,Position=1)]
+[string[]]$InputFile,
+
+[switch]$noFile
+)
 
 $filePhysicalPath1 = "C:\MyScript\"
 $filePhysicalPath2 = "C:\MyScript2\"
+
+
+#define if missing file should be created
+[bool]$writeFile = $true
+if($noFile){$writeFile = $false}
+
 
 
 
@@ -21,17 +32,22 @@ $Date2 = Get-Date -UFormat "%d%m%Y"
 
 #$Pullfile = "C:\MXF\pull-list.csv"
 $Pullfile = $InputFile
-$workingPath = Get-Location
-$Missingfile = $workingPath.ToString() + "\BikeChannel_missing_$Date2.csv"
 
-while (Test-Path $Missingfile)
+if($writeFile)
 {
-		$fileCounter++
-		#$Missingfile = "C:\MyScript\BikeChannel_missing_$Date2-$fileCounter.csv"
-		$Missingfile = $workingPath.ToString() + "\BikeChannel_missing_$Date2-$fileCounter.csv"
+	$workingPath = Get-Location
+	$Missingfile = $workingPath.ToString() + "\BikeChannel_missing_$Date2.csv"
+
+	while (Test-Path $Missingfile)
+	{
+			$fileCounter++
+			#$Missingfile = "C:\MyScript\BikeChannel_missing_$Date2-$fileCounter.csv"
+			$Missingfile = $workingPath.ToString() + "\BikeChannel_missing_$Date2-$fileCounter.csv"
+	}
+	$writer = [system.io.file]::CreateText($Missingfile)
+	$writer.NewLine = "`n"
 }
-$writer = [system.io.file]::CreateText($Missingfile)
-$writer.NewLine = "`n"
+
 
 $records = import-csv $Pullfile
 
@@ -67,12 +83,15 @@ ForEach ($record in $records)
   	Write-Host $trafficIDClock","$Name" is missing and will go on air" $myTxDate
   	$myString = "$Clock,$Name,$myTxDate"
 		#Add-content $Missingfile $myString -nonewline
-		$writer.WriteLine($myString)
-		$MissingFiles++
+		if($writeFile)
+		{
+			$writer.WriteLine($myString)
+			$MissingFiles++
+		}
 	}
 }
 
-$writer.Close()
+if($writeFile) {$writer.Close()}
 
 Write-Host
 Write-Host
@@ -88,7 +107,9 @@ if ($MissingFiles -eq 0)
 }
 else
 {
-	Write-Host "Generated missing list file" $Missingfile
+	
+	if($writeFile){Write-Host "Generated missing list file" $Missingfile}
+	else {Write-Host "Missing list file NOT generated"}
 }
 
 Write-Host "-------------------------------------"
