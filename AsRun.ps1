@@ -1,7 +1,14 @@
-Param([string[]]$InputFile)
+Param(
+[Parameter(Mandatory=$true,Position=1)]
+[string[]]$InputFile,
 
+[switch]$newLogs
+)
 
+#define logs format version
 [bool]$oldLogs = $true
+if($newLogs){$oldLogs = $false}
+
 
 if (!(Test-Path $InputFile))
 {
@@ -124,3 +131,12 @@ Write-Host $FoundRecords 'usefull record found'
 Write-Host ($FoundSpot - 2) 'spot record found'
 Write-Host ''
 Write-Host 'AsRun log created' $AsRunFileOutput
+
+if($newLogs)
+{
+	Write-Host "Using New AsRun log Cinegy format (version 10.x)"
+}
+else
+{
+	Write-Host "Using Old AsRun log Cinegy format (version 9.x)"
+}
