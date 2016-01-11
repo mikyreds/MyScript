@@ -70,12 +70,12 @@ ForEach ($record in $records)
 
 		$myTime = $record.Time
 	
-		$myTime = $myTime -replace "00:","24:"
-		$myTime = $myTime -replace "01:","25:"
-		$myTime = $myTime -replace "02:","26:"
-		$myTime = $myTime -replace "03:","27:"
-		$myTime = $myTime -replace "04:","28:"
-		$myTime = $myTime -replace "05:","29:"
+		$myTime = $myTime -replace "^00:","24:"
+		$myTime = $myTime -replace "^01:","25:"
+		$myTime = $myTime -replace "^02:","26:"
+		$myTime = $myTime -replace "^03:","27:"
+		$myTime = $myTime -replace "^04:","28:"
+		$myTime = $myTime -replace "^05:","29:"
 	
 	
 		if($oldLogs)
