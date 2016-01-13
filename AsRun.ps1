@@ -116,11 +116,12 @@ ForEach ($record in $records)
 
 
 #Write footer
+$FoundSpot = ($FoundSpot + 2) #include header
 $StringFoundRecords = $FoundSpot.ToString("000000")
 $myTempString = '99999998'
 Add-Content $AsRunFileOutput $myTempString$StringFoundRecords
 
-$FoundSpot = ($FoundSpot + 2)
+$FoundSpot = ($FoundSpot + 2) #include footer
 $myTempString = '99999999'
 $StringFoundRecords = $FoundSpot.ToString("000000")
 Add-Content $AsRunFileOutput $myTempString$StringFoundRecords
@@ -130,7 +131,7 @@ Add-Content $AsRunFileOutput $myTempString$StringFoundRecords
 Write-Host ''
 Write-Host 'AsRun file contains:' $righe 'rows'
 Write-Host $FoundRecords 'usefull record found'
-Write-Host ($FoundSpot - 2) 'spot record found'
+Write-Host ($FoundSpot - 4) 'spot record found'
 Write-Host ''
 Write-Host 'AsRun log created' $AsRunFileOutput
 
