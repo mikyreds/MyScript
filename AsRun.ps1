@@ -17,6 +17,7 @@ Write-Host "File non trovato"
 exit
 }
 
+$errorClocks = @()
 $FoundRecords = 0
 $FoundSpot = 0
 
@@ -36,7 +37,7 @@ while (Test-Path $AsRunFileOutput)
 
 if($oldLogs)
 {
-	$header = "Time","Date","XXX","Title","YYY","Duration","ZZZ","ClockID"
+	$header = "Time","Date","XXX","Title","YYY","Duration","Variance","ClockID"
 	$records = import-csv -Delimiter "`t" -Header $header $AsRunFile
 }
 else
@@ -58,6 +59,7 @@ $myNewDateYY = $myNewDate.substring(6,2)
 Add-Content $AsRunFileOutput $Date2'00SMSPOSTED 001 '
 #Add-Content $Asfile $Date2'01BIKE'$myNewDatdTrimmed
 Add-Content $AsRunFileOutput $Date2'01BIKE'$myNewDateDD$myNewDateMM$myNewDateYY
+
 
 Write-Host ''
 
@@ -100,6 +102,8 @@ ForEach ($record in $records)
 				$myDuration = $record.DurationSeconds
 		}
 		
+
+		
 		if($clock)
 		{
 			$FoundSpot++
@@ -107,6 +111,11 @@ ForEach ($record in $records)
 			$myNewTime = $myNewTime.Substring(0,6)
 			
 			$myClock = $clock -replace '-','/'
+			
+			if ($record.Variance)
+			{
+				$errorClocks += $myClock
+			}
 	
 			Write-Host $myClock "Spot aired at" $myTime "with total secod duration of" $myStringDuration
 			Add-Content $AsRunFileOutput $myNewTime'03    0000000000000'$myStringDuration$myClock
@@ -134,6 +143,14 @@ Write-Host $FoundRecords 'usefull record found'
 Write-Host ($FoundSpot - 4) 'spot record found'
 Write-Host ''
 Write-Host 'AsRun log created' $AsRunFileOutput
+
+if($errorClocks)
+{
+	Write-Host ""
+	Write-Host "Following clocks have variance errors"
+	Write-Host $errorClocks
+	Write-Host ""
+}
 
 if($newLogs)
 {
