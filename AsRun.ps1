@@ -5,6 +5,7 @@ Param(
 [switch]$newLogs
 )
 
+
 #define logs format version
 [bool]$oldLogs = $true
 if($newLogs){$oldLogs = $false}
@@ -50,12 +51,13 @@ $righe = ($records).length
 $myDate = $records[0].Date
 $myNewDate = ($myDate)-replace "/",""
 #$myNewDatdTrimmed = $myNewDate.remove(4,2)
-$myNewDateDD = $myNewDate.substring(0,4)
+$myNewDateDD = $myNewDate.substring(2,2)
+$myNewDateMM = $myNewDate.substring(0,2)
 $myNewDateYY = $myNewDate.substring(6,2)	
 	
 Add-Content $AsRunFileOutput $Date2'00SMSPOSTED 001 '
 #Add-Content $Asfile $Date2'01BIKE'$myNewDatdTrimmed
-Add-Content $AsRunFileOutput $Date2'01BIKE'$myNewDateDD$myNewDateYY
+Add-Content $AsRunFileOutput $Date2'01BIKE'$myNewDateDD$myNewDateMM$myNewDateYY
 
 Write-Host ''
 
