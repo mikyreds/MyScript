@@ -84,7 +84,14 @@ ForEach ($record in $records)
 	
 		if($oldLogs)
 		{
-			$myDuration = $record.Duration
+			if ($record.Variance)#check if there was some problem with on-air
+			{
+					$myDuration = $record.Variance
+			}else
+			{
+				$myDuration = $record.Duration
+			}
+			
 			$myMinutes = $myDuration.substring(3,2)
 			$mySeconds = $myDuration.substring(6,2)
 			
