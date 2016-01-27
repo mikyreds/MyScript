@@ -63,16 +63,17 @@ Add-Content $AsRunFileOutput $Date2'01BIKE'$myNewDateDD$myNewDateMM$myNewDateYY
 
 Write-Host ''
 
-ForEach ($record in $records)
+#ForEach ($record in $records)
+for ($i=0 ; $i -lt $righe ; $i++)
 {
 	
-	if ($oldLogs -or ($record.START -eq "START"))
+	if ($oldLogs -or ($records[$i].START -eq "START"))
 	{
 		$FoundRecords++
-		$clock = $record.ClockID
-		$myTitle = $record.Title
+		$clock = $records[$i].ClockID
+		$myTitle = $records[$i].Title
 
-		$myTime = $record.Time
+		$myTime = $records[$i].Time
 	
 		$myTime = $myTime -replace "^00:","24:"
 		$myTime = $myTime -replace "^01:","25:"
@@ -84,12 +85,12 @@ ForEach ($record in $records)
 	
 		if($oldLogs)
 		{
-			if ($record.Variance)#check if there was some problem with on-air
+			if ($records[$i].Variance)#check if there was some problem with on-air
 			{
-					$myDuration = $record.Variance
+					$myDuration = $records[$i].Variance
 			}else
 			{
-				$myDuration = $record.Duration
+				$myDuration = $records[$i].Duration
 			}
 			
 			$myMinutes = $myDuration.substring(3,2)
@@ -106,7 +107,7 @@ ForEach ($record in $records)
 		}
 		else
 		{
-				$myDuration = $record.DurationSeconds
+				$myDuration = $records[$i].DurationSeconds
 		}
 		
 
@@ -119,7 +120,7 @@ ForEach ($record in $records)
 			
 			$myClock = $clock -replace '-','/'
 			
-			if ($record.Variance)
+			if ($records[$i].Variance)
 			{
 				$errorClocks += $myClock
 			}
