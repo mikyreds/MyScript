@@ -83,7 +83,7 @@ for ($i=0 ; $i -lt $righe ; $i++)
 		$myTime = $myTime -replace "^05:","29:"
 	
 	
-		if($oldLogs)
+		if($oldLogs)#chech variance on old logs
 		{
 			if ($records[$i].Variance)#check if there was some problem with on-air
 			{
@@ -105,9 +105,19 @@ for ($i=0 ; $i -lt $righe ; $i++)
 			$myStringDuration = $myDuration -as[string]
 			$myStringDuration = $myStringDuration.PadLeft(3,'0')
 		}
-		else
+		else #chech variance on new logs
 		{
 				$myDuration = $records[$i].DurationSeconds
+				
+				if(($records[$i + 1].START -eq "STOP") -and ($records[$i + 1].DurationSeconds -ne $myDuration))
+				{
+					$myDuration = $records[$i + 1].DurationSeconds
+				}
+				
+				$myStringDuration = $myDuration # -as[string]
+				$myStringDuration = $myStringDuration -replace ".{4}$"
+				
+				$myStringDuration = $myStringDuration.PadLeft(3,'0')
 		}
 		
 
@@ -120,10 +130,10 @@ for ($i=0 ; $i -lt $righe ; $i++)
 			
 			$myClock = $clock -replace '-','/'
 			
-			if ($records[$i].Variance)
-			{
-				$errorClocks += $myClock
-			}
+#			if ($records[$i].Variance)
+#			{
+#				$errorClocks += $myClock
+#			}
 	
 			Write-Host $myClock "Spot aired at" $myTime "with total secod duration of" $myStringDuration
 			Add-Content $AsRunFileOutput $myNewTime'03    0000000000000'$myStringDuration$myClock
@@ -152,13 +162,13 @@ Write-Host ($FoundSpot - 4) 'spot record found'
 Write-Host ''
 Write-Host 'AsRun log created' $AsRunFileOutput
 
-if($errorClocks)
-{
-	Write-Host ""
-	Write-Host "Following clocks have variance errors"
-	Write-Host $errorClocks
-	Write-Host ""
-}
+#if($errorClocks)
+#{
+#	Write-Host ""
+#	Write-Host "Following clocks have variance errors"
+#	Write-Host $errorClocks
+#	Write-Host ""
+#}
 
 if($newLogs)
 {
