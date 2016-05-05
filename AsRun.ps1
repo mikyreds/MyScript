@@ -2,14 +2,15 @@ Param(
 [Parameter(Mandatory=$true,Position=1)]
 [string[]]$InputFile,
 
-[switch]$newLogs,
+[switch]$oldLogs,
 [switch]$barbFile
 )
 
 
 #define logs format version
-[bool]$oldLogs = $true
-if($newLogs){$oldLogs = $false}
+[bool]$newLogs = $true
+
+if($oldLogs){$newLogs = $false}
 
 
 if (!(Test-Path $InputFile))
@@ -176,7 +177,7 @@ for ($i=0 ; $i -lt $righe ; $i++)
 				}
 				
 				$myStringDuration = $myDuration # -as[string]
-				$myStringDuration = $myStringDuration -replace ".{3}$"	
+				$myStringDuration = $myStringDuration -replace ".{4}$"	
 				$myStringDuration = $myStringDuration.PadLeft(3,'0')
 		}
 		
